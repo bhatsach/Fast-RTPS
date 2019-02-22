@@ -228,7 +228,7 @@ void TCPChannelResource::add_logical_port_response(
             {
                 logical_output_ports_.push_back(port);
                 negotiation_condition_.notify_all();
-                logInfo(RTCP, "OpenedLogicalPort " << port);
+                logError(RTCP, "OpenedLogicalPort: " << port);
             }
             else
             {
