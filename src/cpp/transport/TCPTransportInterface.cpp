@@ -683,7 +683,7 @@ bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
     if (IsLocatorSupported(locator) && (logicalPort != 0))
     {
         std::unique_lock<std::mutex> scopedLock(sockets_map_mutex_);
-        logError(RTCP, "Called to OpenOutputChannel (physical: " << IPLocator::getPhysicalPort(locator) << "; logical: "
+        logInfo(RTCP, "Called to OpenOutputChannel (physical: " << IPLocator::getPhysicalPort(locator) << "; logical: "
             << IPLocator::getLogicalPort(locator) << ") @ " << IPLocator::to_string(locator));
 
         const Locator_t& physicalLocator = IPLocator::toPhysicalLocator(locator);
@@ -703,12 +703,11 @@ bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
         if (socketIt != channel_resources_.end())
         {
             channel = socketIt->second;
-            logError(OpenOutputChannel, "OpenOutputChannel already opened");
         }
         else
         {
             // Create output channel
-            logError(OpenOutputChannel, "OpenOutputChannel (physical: "
+            logInfo(OpenOutputChannel, "OpenOutputChannel (physical: "
                 << IPLocator::getPhysicalPort(locator) << "; logical: "
                 << IPLocator::getLogicalPort(locator) << ") @ " << IPLocator::to_string(locator));
 #if TLS_FOUND
