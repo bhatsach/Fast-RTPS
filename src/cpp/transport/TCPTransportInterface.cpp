@@ -678,6 +678,9 @@ void TCPTransportInterface::close_tcp_socket(TCPChannelResource *p_channel_resou
 
 bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
 {
+    logError(DEBUG, "--- OpenOutputChannel (logical: "
+            << IPLocator::getLogicalPort(locator) << ") @ "
+            << IPLocator::to_string(locator));
     bool success = false;
     uint16_t logicalPort = IPLocator::getLogicalPort(locator);
     if (IsLocatorSupported(locator) && (logicalPort != 0))
