@@ -692,6 +692,8 @@ bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
         const Locator_t& physicalLocator = IPLocator::toPhysicalLocator(locator);
         auto socketIt = channel_resources_.find(physicalLocator);
 
+        TCPChannelResource* channel = nullptr;
+
         // Maybe as WAN?
         if (socketIt == channel_resources_.end() && IPLocator::hasWan(locator))
         {
@@ -700,9 +702,11 @@ bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
             wan_locator.port = locator.port; // Copy full port
             IPLocator::setIPv4(wan_locator, IPLocator::toWanstring(locator)); // WAN to IP
             socketIt = channel_resources_.find(IPLocator::toPhysicalLocator(wan_locator));
+            channel = socketIt->second;
+            channel_resources_[IPLocator::toPhysicalLocator(locator)] = channel; // Add alias!
+
         }
 
-        TCPChannelResource* channel = nullptr;
         if (socketIt != channel_resources_.end())
         {
             channel = socketIt->second;
