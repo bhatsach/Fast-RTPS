@@ -189,7 +189,6 @@ void TCPChannelResource::add_logical_port(uint16_t port)
             {
                 TCPTransactionId id = rtcp_manager_->sendOpenLogicalPortRequest(this, port);
                 negotiating_logical_ports_[id] = port;
-                logError(DEBUG, "Added port to open: " << port);
             }
         }
     }
@@ -228,7 +227,7 @@ void TCPChannelResource::add_logical_port_response(
             {
                 logical_output_ports_.push_back(port);
                 negotiation_condition_.notify_all();
-                logError(RTCP, "OpenedLogicalPort: " << port);
+                logInfo(RTCP, "OpenedLogicalPort: " << port);
             }
             else
             {

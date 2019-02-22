@@ -113,6 +113,10 @@ TCPTransportInterface::TCPTransportInterface()
     , send_retry_active_(true)
     , clean_sockets_pool_timer_(nullptr)
 {
+    if (configuration()->apply_security)
+    {
+        logError(RTCP_TLS, "Trying to use TCP Transport with TLS but TLS was not found.");
+    }
 }
 #endif
 
@@ -678,9 +682,6 @@ void TCPTransportInterface::close_tcp_socket(TCPChannelResource *p_channel_resou
 
 bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
 {
-    logError(DEBUG, "--- OpenOutputChannel (logical: "
-            << IPLocator::getLogicalPort(locator) << ") @ "
-            << IPLocator::to_string(locator));
     bool success = false;
     uint16_t logicalPort = IPLocator::getLogicalPort(locator);
     if (IsLocatorSupported(locator) && (logicalPort != 0))
@@ -701,7 +702,6 @@ bool TCPTransportInterface::OpenOutputChannel(const Locator_t& locator)
             IPLocator::setIPv4(wan_locator, IPLocator::toWanstring(locator)); // WAN to IP
             socketIt = channel_resources_.find(IPLocator::toPhysicalLocator(wan_locator));
             channel_resources_[IPLocator::toPhysicalLocator(locator)] = socketIt->second; // Add alias!
-            logError(DEBUG, "Found as: " << socketIt->second->locator());
         }
 
         TCPChannelResource* channel = nullptr;

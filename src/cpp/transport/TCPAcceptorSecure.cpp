@@ -63,14 +63,12 @@ void TCPAcceptorSecure::accept(
                         role = ssl::stream_base::client;
                     }
 
-                    logError(RTCP_TLS, "Accepted");
-
                     secure_socket_ = new asio::ssl::stream<asio::ip::tcp::socket>(std::move(socket), ssl_context);
 
                     secure_socket_->async_handshake(role,
                         [this, locator, parent](const std::error_code& error)
                         {
-                            logError(RTCP_TLS, "Handshake: " << error.message());
+                            //logError(RTCP_TLS, "Handshake: " << error.message());
                             parent->SecureSocketAccepted(this, locator, error);
                         });
                 }

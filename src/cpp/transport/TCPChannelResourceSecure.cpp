@@ -99,22 +99,19 @@ void TCPChannelResourceSecure::connect()
                         role = ssl::stream_base::server;
                     }
 
-                    logError(RTCP_TLS, "Connected: " << IPLocator::to_string(locator));
-                    std::cout << "Connected: " << IPLocator::to_string(locator) << std::endl;
+                    logInfo(RTCP_TLS, "Connected: " << IPLocator::to_string(locator));
 
                     secure_socket->async_handshake(role,
                         [locator, parent](const std::error_code& error)
                     {
                         if (!error)
                         {
-                            logError(RTCP_TLS, "Handshake OK: " << IPLocator::to_string(locator));
-                            std::cout << "Handshake OK: " << IPLocator::to_string(locator) << std::endl;
+                            logInfo(RTCP_TLS, "Handshake OK: " << IPLocator::to_string(locator));
                             parent->SocketConnected(locator, error);
                         }
                         else
                         {
                             logError(RTCP_TLS, "Handshake failed: " << error.message());
-                            std::cout << "Handshake failed: " << error.message() << std::endl;
                             eClock::my_sleep(5000); // Retry, but after a big while
                             parent->SocketConnected(locator, error);
                         }
